@@ -16,7 +16,7 @@ public class SalesRepository
         _connectionString = connectionString;
     }
 
-    // ==================== KPI ====================
+    // KPI 
     public async Task<decimal> GetTotalRevenueAsync(FilterSettings filter)
     {
         const string sql = @"
@@ -95,7 +95,7 @@ public class SalesRepository
         return Convert.ToDecimal(result);
     }
 
-    // ==================== Фильтры ====================
+    // Фильтры 
     public async Task<List<CategoryItem>> GetCategoriesAsync()
     {
         const string sql = "SELECT id, name FROM categories ORDER BY name";
@@ -130,7 +130,7 @@ public class SalesRepository
         return list;
     }
 
-    // ==================== Графики ====================
+    // Графики
     public async Task<List<CategoryRevenue>> GetRevenueByCategoryAsync(FilterSettings filter)
     {
         const string sql = @"
@@ -175,7 +175,7 @@ public class SalesRepository
         SELECT 
             c.name,
             COALESCE(SUM(s.amount), 0) as total_revenue,
-            COUNT(s.id) as order_count          -- ← исправлено
+            COUNT(s.id) as order_count
         FROM categories c
         LEFT JOIN sales s ON s.category_id = c.id 
             AND s.sale_date BETWEEN @from AND @to

@@ -6,6 +6,6 @@ public class FilterSettings
 {
     public DateTime FromDate { get; set; } = DateTime.Today.AddMonths(-1);
     public DateTime ToDate { get; set; } = DateTime.Today;
-    public int? CategoryId { get; set; } = null;   // null = все категории
-    public int? RegionId { get; set; } = null;     // null = все регионы
+    public int? CategoryId { get; set; } = null;
+    public int? RegionId { get; set; } = null;
 }

@@ -33,7 +33,7 @@ public partial class ConnectionViewModel : ObservableObject
     [ObservableProperty]
     private bool _isTesting = false;
 
-    public bool DialogResult { get; private set; } = false;   // ← Оставляем только одно объявление
+    public bool DialogResult { get; private set; } = false;
     public Action? CloseAction { get; set; }
 
     public ConnectionViewModel(ConfigService configService)

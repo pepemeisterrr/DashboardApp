@@ -45,7 +45,7 @@ public partial class MainViewModel : ObservableObject
     // График OxyPlot
     [ObservableProperty] private PlotModel? _categoryRevenuePlotModel;
 
-    // Таблица (новое)
+    // Таблица
     public ObservableCollection<CategorySummary> CategorySummaries { get; } = new();
 
     public MainViewModel()
@@ -99,7 +99,7 @@ public partial class MainViewModel : ObservableObject
         AverageCheck = await _salesRepository.GetAverageCheckAsync(_currentFilter);
 
         await LoadCategoryRevenueChartAsync();
-        await LoadCategorySummariesAsync();   // ← загрузка таблицы
+        await LoadCategorySummariesAsync();
 
         LastUpdated = DateTime.Now;
         StatusMessage = "Данные обновлены";
@@ -134,7 +134,9 @@ public partial class MainViewModel : ObservableObject
         {
             Title = "Выручка",
             LabelPlacement = LabelPlacement.Inside,
-            LabelFormatString = "{0:N0}"
+            LabelFormatString = "{0:N0}",
+            FillColor = OxyColor.Parse("#003049"),
+            TextColor = OxyColors.White
         };
 
         foreach (var item in data)
@@ -147,7 +149,7 @@ public partial class MainViewModel : ObservableObject
         CategoryRevenuePlotModel = plotModel;
     }
 
-    // === Загрузка данных для таблицы ===
+    // Загрузка данных для таблицы
     private async Task LoadCategorySummariesAsync()
     {
         if (_salesRepository == null) return;
@@ -165,7 +167,7 @@ public partial class MainViewModel : ObservableObject
     {
         if (string.IsNullOrEmpty(categoryName)) return;
 
-        // Если уже выбрана эта же категория — сбрасываем фильтр
+        // Если уже выбрана эта же категория сбрасываем фильтр
         if (SelectedCategory != null && SelectedCategory.Name == categoryName)
         {
             SelectedCategory = null;

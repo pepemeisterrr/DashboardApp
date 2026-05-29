@@ -8,7 +8,7 @@ public class ConnectionSettings
     public string Username { get; set; } = "postgres";
     public string EncryptedPassword { get; set; } = string.Empty;
 
-    // Для удобства — собираем строку подключения (пароль подставляется позже)
+    // Для удобства собираем строку подключения (пароль подставляется позже)
     public string GetConnectionString(string plainPassword)
     {
         return $"Host={Host};Port={Port};Database={Database};Username={Username};Password={plainPassword};SSL Mode=Prefer;";

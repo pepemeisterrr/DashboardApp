@@ -72,27 +72,27 @@
 
         <!-- KPI -->
         <UniformGrid Grid.Row="2" Columns="3" Margin="15,5,15,10">
-            <Border Background="#2E7D32" CornerRadius="8" Margin="8" Padding="18">
+            <Border Background="#003049" CornerRadius="8" Margin="8" Padding="18">
                 <StackPanel>
                     <TextBlock Text="Общая выручка" Foreground="White" FontSize="14"/>
                     <TextBlock Text="{Binding TotalRevenue, StringFormat='N2'}" Foreground="White" FontSize="26" FontWeight="Bold"/>
-                    <TextBlock Text="₽" Foreground="#A5D6A7" FontSize="15"/>
+                    <TextBlock Text="₽" Foreground="#005786" FontSize="15"/>
                 </StackPanel>
             </Border>
 
-            <Border Background="#1565C0" CornerRadius="8" Margin="8" Padding="18">
+            <Border Background="#f77f00" CornerRadius="8" Margin="8" Padding="18">
                 <StackPanel>
                     <TextBlock Text="Количество заказов" Foreground="White" FontSize="14"/>
                     <TextBlock Text="{Binding OrderCount}" Foreground="White" FontSize="26" FontWeight="Bold"/>
-                    <TextBlock Text="шт." Foreground="#90CAF9" FontSize="15"/>
+                    <TextBlock Text="шт." Foreground="#FFB667" FontSize="15"/>
                 </StackPanel>
             </Border>
 
-            <Border Background="#6A1B9A" CornerRadius="8" Margin="8" Padding="18">
+            <Border Background="#941b0c" CornerRadius="8" Margin="8" Padding="18">
                 <StackPanel>
                     <TextBlock Text="Средний чек" Foreground="White" FontSize="14"/>
                     <TextBlock Text="{Binding AverageCheck, StringFormat='N2'}" Foreground="White" FontSize="26" FontWeight="Bold"/>
-                    <TextBlock Text="₽" Foreground="#CE93D8" FontSize="15"/>
+                    <TextBlock Text="₽" Foreground="#EC2F16" FontSize="15"/>
                 </StackPanel>
             </Border>
         </UniformGrid>

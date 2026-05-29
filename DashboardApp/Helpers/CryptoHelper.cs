@@ -6,7 +6,7 @@ namespace DashboardApp.Helpers;
 
 public static class CryptoHelper
 {
-    private static readonly byte[]? _entropy = null; // Можно добавить entropy для усиления
+    private static readonly byte[]? _entropy = null;
 
     public static string Protect(string plainText)
     {
