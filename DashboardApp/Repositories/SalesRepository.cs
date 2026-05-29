@@ -172,15 +172,16 @@ public class SalesRepository
     public async Task<List<CategorySummary>> GetCategorySummaryAsync(FilterSettings filter)
     {
         string sql = @"
-        SELECT c.name, 
-               COALESCE(SUM(s.amount), 0) as total_revenue,
-               COUNT(*) as order_count
+        SELECT 
+            c.name,
+            COALESCE(SUM(s.amount), 0) as total_revenue,
+            COUNT(s.id) as order_count          -- ← исправлено
         FROM categories c
         LEFT JOIN sales s ON s.category_id = c.id 
             AND s.sale_date BETWEEN @from AND @to
             AND (@categoryId IS NULL OR s.category_id = @categoryId)
             AND (@regionId IS NULL OR s.region_id = @regionId)
-        GROUP BY c.name
+        GROUP BY c.name, c.id
         ORDER BY total_revenue DESC";
 
         var list = new List<CategorySummary>();

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using OxyPlot;
 
@@ -14,19 +15,22 @@ public partial class MainWindow : Window
     private void CategoryChart_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (DataContext is not ViewModels.MainViewModel vm) return;
-        if (CategoryChart.Model == null) return;
 
-        // Получаем координаты клика относительно графика
-        var position = e.GetPosition(CategoryChart);
-        var hitResult = CategoryChart.Model.HitTest(new HitTestArguments(position, 10));
+        var plotView = sender as OxyPlot.Wpf.PlotView;
+        if (plotView?.Model == null) return;
 
-        if (hitResult?.Element is OxyPlot.Series.BarItem barItem)
+        var position = e.GetPosition(plotView);
+        var screenPoint = new ScreenPoint(position.X, position.Y);
+
+        // Получаем результаты hit-test
+        var hitResults = plotView.Model.HitTest(new HitTestArguments(screenPoint, 10));
+        var hitResult = hitResults.FirstOrDefault();
+
+        if (hitResult?.Element is OxyPlot.Series.BarSeries && hitResult.Index >= 0)
         {
-            // Определяем индекс категории
-            int index = CategoryChart.Model.Series[0].Items.IndexOf(barItem);
-            if (index >= 0 && index < vm.CategorySummaries.Count)
+            if (hitResult.Index < vm.CategorySummaries.Count)
             {
-                string categoryName = vm.CategorySummaries[index].CategoryName;
+                string categoryName = vm.CategorySummaries[(int)hitResult.Index].CategoryName;
                 vm.OnCategoryChartClicked(categoryName);
             }
         }

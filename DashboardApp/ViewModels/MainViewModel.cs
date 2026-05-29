@@ -116,7 +116,8 @@ public partial class MainViewModel : ObservableObject
         var categoryAxis = new CategoryAxis
         {
             Position = AxisPosition.Left,
-            Title = "Категория"
+            Title = "Категория",           
+            AxisTitleDistance = 12         
         };
 
         var valueAxis = new LinearAxis
@@ -160,17 +161,22 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    // === Метод для клика по графику (будем использовать позже) ===
     public void OnCategoryChartClicked(string? categoryName)
     {
         if (string.IsNullOrEmpty(categoryName)) return;
 
-        var selected = Categories.FirstOrDefault(c => c.Name == categoryName);
-        if (selected != null)
+        // Если уже выбрана эта же категория — сбрасываем фильтр
+        if (SelectedCategory != null && SelectedCategory.Name == categoryName)
         {
-            SelectedCategory = selected;
-            _ = ApplyFiltersAsync();
+            SelectedCategory = null;
         }
+        else
+        {
+            var selected = Categories.FirstOrDefault(c => c.Name == categoryName);
+            SelectedCategory = selected;
+        }
+
+        _ = ApplyFiltersAsync();
     }
 
     private async Task ReinitializeDataAsync()
