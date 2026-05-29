@@ -111,21 +111,24 @@
 
         <!-- График -->
         <Border Grid.Row="3" 
-                Background="White" 
-                BorderBrush="#E0E0E0" 
-                BorderThickness="1"
-                Margin="15,5,15,10"
-                CornerRadius="6"
-                Padding="15">
+        Background="White" 
+        BorderBrush="#E0E0E0" 
+        BorderThickness="1"
+        Margin="15,5,15,10"
+        CornerRadius="6"
+        Padding="15">
 
             <StackPanel>
                 <TextBlock Text="Выручка по категориям" 
-                           FontSize="16" 
-                           FontWeight="SemiBold" 
-                           Margin="0,0,0,10"/>
+                   FontSize="16" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,10"/>
 
-                <lvc:CartesianChart Series="{Binding RevenueByCategorySeries}" 
-                                    Height="280"/>
+                <lvc:CartesianChart Series="{Binding RevenueByCategorySeries}">
+                    <lvc:CartesianChart.XAxes>
+                        <lvc:Axis Labels="{Binding CategoryLabels}" />
+                    </lvc:CartesianChart.XAxes>
+                </lvc:CartesianChart>
             </StackPanel>
         </Border>
 

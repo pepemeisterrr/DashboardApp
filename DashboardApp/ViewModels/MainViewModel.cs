@@ -38,6 +38,7 @@ public partial class MainViewModel : ObservableObject
 
     // График
     public ObservableCollection<ISeries> RevenueByCategorySeries { get; } = new();
+    public ObservableCollection<string> CategoryLabels { get; } = new();   // ← Добавили
 
     public MainViewModel()
     {
@@ -101,11 +102,21 @@ public partial class MainViewModel : ObservableObject
 
         var data = await _salesRepository.GetRevenueByCategoryAsync(_currentFilter);
 
+        // Очищаем и заполняем подписи категорий
+        CategoryLabels.Clear();
+        var revenues = new System.Collections.Generic.List<decimal>();
+
+        foreach (var item in data)
+        {
+            CategoryLabels.Add(item.CategoryName);
+            revenues.Add(item.Revenue);
+        }
+
         RevenueByCategorySeries.Clear();
 
         var series = new ColumnSeries<decimal>
         {
-            Values = data.Select(x => x.Revenue).ToArray(),
+            Values = revenues,
             Name = "Выручка"
         };
 
@@ -128,6 +139,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand] private async Task ApplyFiltersAsync() => await LoadDashboardDataAsync();
+
     [RelayCommand]
     private async Task ResetFiltersAsync()
     {
@@ -137,6 +149,7 @@ public partial class MainViewModel : ObservableObject
         SelectedRegion = null;
         await LoadDashboardDataAsync();
     }
+
     [RelayCommand] private async Task RefreshDataAsync() => await LoadDashboardDataAsync();
 
     [RelayCommand]
