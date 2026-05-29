@@ -42,7 +42,6 @@
         <Border Grid.Row="1" Background="#F5F5F5" Padding="15" Margin="10,5">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 
-                <!-- Период -->
                 <StackPanel Orientation="Horizontal" Margin="0,0,25,0">
                     <TextBlock Text="Период: " VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <DatePicker SelectedDate="{Binding FromDate, Mode=TwoWay}" Width="130" Margin="0,0,5,0"/>
@@ -50,7 +49,6 @@
                     <DatePicker SelectedDate="{Binding ToDate, Mode=TwoWay}" Width="130"/>
                 </StackPanel>
 
-                <!-- Категория -->
                 <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
                     <TextBlock Text="Категория: " VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <ComboBox ItemsSource="{Binding Categories}"
@@ -59,7 +57,6 @@
                               Width="160"/>
                 </StackPanel>
 
-                <!-- Регион -->
                 <StackPanel Orientation="Horizontal" Margin="0,0,25,0">
                     <TextBlock Text="Регион: " VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <ComboBox ItemsSource="{Binding Regions}"
@@ -68,14 +65,8 @@
                               Width="160"/>
                 </StackPanel>
 
-                <!-- Кнопки -->
-                <Button Content="Применить" 
-                        Command="{Binding ApplyFiltersCommand}"
-                        Width="110" Margin="0,0,10,0"/>
-
-                <Button Content="Сбросить фильтры" 
-                        Command="{Binding ResetFiltersCommand}"
-                        Width="140"/>
+                <Button Content="Применить" Command="{Binding ApplyFiltersCommand}" Width="110" Margin="0,0,10,0"/>
+                <Button Content="Сбросить фильтры" Command="{Binding ResetFiltersCommand}" Width="140"/>
             </StackPanel>
         </Border>
 
@@ -84,8 +75,7 @@
             <Border Background="#2E7D32" CornerRadius="8" Margin="8" Padding="18">
                 <StackPanel>
                     <TextBlock Text="Общая выручка" Foreground="White" FontSize="14"/>
-                    <TextBlock Text="{Binding TotalRevenue, StringFormat='N2'}" 
-                               Foreground="White" FontSize="26" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding TotalRevenue, StringFormat='N2'}" Foreground="White" FontSize="26" FontWeight="Bold"/>
                     <TextBlock Text="₽" Foreground="#A5D6A7" FontSize="15"/>
                 </StackPanel>
             </Border>
@@ -93,8 +83,7 @@
             <Border Background="#1565C0" CornerRadius="8" Margin="8" Padding="18">
                 <StackPanel>
                     <TextBlock Text="Количество заказов" Foreground="White" FontSize="14"/>
-                    <TextBlock Text="{Binding OrderCount}" 
-                               Foreground="White" FontSize="26" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding OrderCount}" Foreground="White" FontSize="26" FontWeight="Bold"/>
                     <TextBlock Text="шт." Foreground="#90CAF9" FontSize="15"/>
                 </StackPanel>
             </Border>
@@ -102,27 +91,18 @@
             <Border Background="#6A1B9A" CornerRadius="8" Margin="8" Padding="18">
                 <StackPanel>
                     <TextBlock Text="Средний чек" Foreground="White" FontSize="14"/>
-                    <TextBlock Text="{Binding AverageCheck, StringFormat='N2'}" 
-                               Foreground="White" FontSize="26" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding AverageCheck, StringFormat='N2'}" Foreground="White" FontSize="26" FontWeight="Bold"/>
                     <TextBlock Text="₽" Foreground="#CE93D8" FontSize="15"/>
                 </StackPanel>
             </Border>
         </UniformGrid>
 
-        <!-- График -->
-        <Border Grid.Row="3" 
-        Background="White" 
-        BorderBrush="#E0E0E0" 
-        BorderThickness="1"
-        Margin="15,5,15,10"
-        CornerRadius="6"
-        Padding="15">
+        <!-- График (исправленная версия) -->
+        <Border Grid.Row="3" Background="White" BorderBrush="#E0E0E0" BorderThickness="1"
+                Margin="15,5,15,10" CornerRadius="6" Padding="15">
 
             <StackPanel>
-                <TextBlock Text="Выручка по категориям" 
-                   FontSize="16" 
-                   FontWeight="SemiBold" 
-                   Margin="0,0,0,10"/>
+                <TextBlock Text="Выручка по категориям" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
 
                 <lvc:CartesianChart Series="{Binding RevenueByCategorySeries}">
                     <lvc:CartesianChart.XAxes>
