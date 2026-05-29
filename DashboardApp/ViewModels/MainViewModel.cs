@@ -4,8 +4,9 @@ using DashboardApp.Models;
 using DashboardApp.Repositories;
 using DashboardApp.Services;
 using DashboardApp.Views;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
@@ -41,9 +42,8 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private DateTime _fromDate = DateTime.Today.AddMonths(-3);
     [ObservableProperty] private DateTime _toDate = DateTime.Today;
 
-    // График
-    public ObservableCollection<ISeries> RevenueByCategorySeries { get; } = new();
-    public ObservableCollection<string> CategoryLabels { get; } = new();
+    // График OxyPlot
+    [ObservableProperty] private PlotModel? _categoryRevenuePlotModel;
 
     public MainViewModel()
     {
@@ -95,36 +95,53 @@ public partial class MainViewModel : ObservableObject
         OrderCount = await _salesRepository.GetOrderCountAsync(_currentFilter);
         AverageCheck = await _salesRepository.GetAverageCheckAsync(_currentFilter);
 
-        await LoadChartsDataAsync();
+        await LoadCategoryRevenueChartAsync();
 
         LastUpdated = DateTime.Now;
         StatusMessage = "Данные обновлены";
     }
 
-    private async Task LoadChartsDataAsync()
+    private async Task LoadCategoryRevenueChartAsync()
     {
         if (_salesRepository == null) return;
 
         var data = await _salesRepository.GetRevenueByCategoryAsync(_currentFilter);
 
-        CategoryLabels.Clear();
-        var revenues = new System.Collections.Generic.List<decimal>();
+        var plotModel = new PlotModel { Title = "Выручка по категориям" };
+
+        // Категории — слева (Y-ось)
+        var categoryAxis = new CategoryAxis
+        {
+            Position = AxisPosition.Left,
+            Title = "Категория"
+        };
+
+        // Значения — снизу (X-ось)
+        var valueAxis = new LinearAxis
+        {
+            Position = AxisPosition.Bottom,
+            Title = "Выручка (₽)",
+            StringFormat = "N0"
+        };
+
+        plotModel.Axes.Add(categoryAxis);
+        plotModel.Axes.Add(valueAxis);
+
+        var barSeries = new BarSeries
+        {
+            Title = "Выручка",
+            LabelPlacement = LabelPlacement.Inside,
+            LabelFormatString = "{0:N0}"
+        };
 
         foreach (var item in data)
         {
-            CategoryLabels.Add(item.CategoryName);
-            revenues.Add(item.Revenue);
+            categoryAxis.Labels.Add(item.CategoryName);
+            barSeries.Items.Add(new BarItem { Value = (double)item.Revenue });
         }
 
-        RevenueByCategorySeries.Clear();
-
-        var series = new ColumnSeries<decimal>
-        {
-            Values = revenues,
-            Name = "Выручка"
-        };
-
-        RevenueByCategorySeries.Add(series);
+        plotModel.Series.Add(barSeries);
+        CategoryRevenuePlotModel = plotModel;
     }
 
     private async Task ReinitializeDataAsync()
@@ -142,7 +159,6 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    // === Экспорт в PNG ===
     [RelayCommand]
     private void ExportToPng()
     {
