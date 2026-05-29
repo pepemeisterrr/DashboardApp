@@ -23,7 +23,7 @@
         <!-- Меню -->
         <Menu Grid.Row="0">
             <MenuItem Header="Файл">
-                <MenuItem Header="Экспорт в PNG"/>
+                <MenuItem Header="Экспорт в PNG" Command="{Binding ExportToPngCommand}"/>
                 <MenuItem Header="Выход"/>
             </MenuItem>
             <MenuItem Header="Настройки">

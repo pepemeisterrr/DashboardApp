@@ -6,10 +6,15 @@ using DashboardApp.Services;
 using DashboardApp.Views;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace DashboardApp.ViewModels;
 
@@ -134,6 +139,45 @@ public partial class MainViewModel : ObservableObject
         catch (Exception ex)
         {
             StatusMessage = $"Ошибка: {ex.Message}";
+        }
+    }
+
+    // === Экспорт в PNG ===
+    [RelayCommand]
+    private void ExportToPng()
+    {
+        var dialog = new SaveFileDialog
+        {
+            Filter = "PNG Image|*.png",
+            FileName = $"Dashboard_{DateTime.Now:yyyyMMdd_HHmmss}.png",
+            DefaultExt = ".png"
+        };
+
+        if (dialog.ShowDialog() != true) return;
+
+        try
+        {
+            var mainWindow = Application.Current.MainWindow;
+            if (mainWindow == null) return;
+
+            var renderTargetBitmap = new RenderTargetBitmap(
+                (int)mainWindow.ActualWidth,
+                (int)mainWindow.ActualHeight,
+                96, 96, PixelFormats.Pbgra32);
+
+            renderTargetBitmap.Render(mainWindow);
+
+            var pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+            using var stream = new FileStream(dialog.FileName, FileMode.Create);
+            pngEncoder.Save(stream);
+
+            StatusMessage = "Экспорт в PNG выполнен успешно";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Ошибка экспорта: {ex.Message}";
         }
     }
 
