@@ -38,7 +38,7 @@ public partial class MainViewModel : ObservableObject
 
     // График
     public ObservableCollection<ISeries> RevenueByCategorySeries { get; } = new();
-    public ObservableCollection<string> CategoryLabels { get; } = new();   // ← Добавили
+    public ObservableCollection<string> CategoryLabels { get; } = new();
 
     public MainViewModel()
     {
@@ -102,7 +102,6 @@ public partial class MainViewModel : ObservableObject
 
         var data = await _salesRepository.GetRevenueByCategoryAsync(_currentFilter);
 
-        // Очищаем и заполняем подписи категорий
         CategoryLabels.Clear();
         var revenues = new System.Collections.Generic.List<decimal>();
 
