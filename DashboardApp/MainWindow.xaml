@@ -14,15 +14,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Меню -->
             <RowDefinition Height="Auto"/>
-            <!-- Фильтры -->
             <RowDefinition Height="Auto"/>
-            <!-- KPI -->
             <RowDefinition Height="*"/>
-            <!-- Графики -->
             <RowDefinition Height="Auto"/>
-            <!-- Статус бар -->
         </Grid.RowDefinitions>
 
         <!-- Меню -->
@@ -38,31 +33,28 @@
             <MenuItem Header="Справка" />
         </Menu>
 
-        <!-- Панель фильтров -->
+        <!-- Фильтры -->
         <Border Grid.Row="1" Background="#F5F5F5" Padding="15" Margin="10,5">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-
                 <StackPanel Orientation="Horizontal" Margin="0,0,25,0">
-                    <TextBlock Text="Период: " VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="Период:" VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <DatePicker SelectedDate="{Binding FromDate, Mode=TwoWay}" Width="130" Margin="0,0,5,0"/>
                     <TextBlock Text="—" VerticalAlignment="Center" Margin="0,0,5,0"/>
                     <DatePicker SelectedDate="{Binding ToDate, Mode=TwoWay}" Width="130"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
-                    <TextBlock Text="Категория: " VerticalAlignment="Center" Margin="0,0,8,0"/>
-                    <ComboBox ItemsSource="{Binding Categories}"
+                    <TextBlock Text="Категория:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <ComboBox ItemsSource="{Binding Categories}" 
                               SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
-                              DisplayMemberPath="Name"
-                              Width="160"/>
+                              DisplayMemberPath="Name" Width="160"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="0,0,25,0">
-                    <TextBlock Text="Регион: " VerticalAlignment="Center" Margin="0,0,8,0"/>
-                    <ComboBox ItemsSource="{Binding Regions}"
+                    <TextBlock Text="Регион:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <ComboBox ItemsSource="{Binding Regions}" 
                               SelectedItem="{Binding SelectedRegion, Mode=TwoWay}"
-                              DisplayMemberPath="Name"
-                              Width="160"/>
+                              DisplayMemberPath="Name" Width="160"/>
                 </StackPanel>
 
                 <Button Content="Применить" Command="{Binding ApplyFiltersCommand}" Width="110" Margin="0,0,10,0"/>
@@ -70,7 +62,7 @@
             </StackPanel>
         </Border>
 
-        <!-- KPI Карточки -->
+        <!-- KPI -->
         <UniformGrid Grid.Row="2" Columns="3" Margin="15,5,15,10">
             <Border Background="#2E7D32" CornerRadius="8" Margin="8" Padding="18">
                 <StackPanel>
@@ -79,7 +71,6 @@
                     <TextBlock Text="₽" Foreground="#A5D6A7" FontSize="15"/>
                 </StackPanel>
             </Border>
-
             <Border Background="#1565C0" CornerRadius="8" Margin="8" Padding="18">
                 <StackPanel>
                     <TextBlock Text="Количество заказов" Foreground="White" FontSize="14"/>
@@ -87,7 +78,6 @@
                     <TextBlock Text="шт." Foreground="#90CAF9" FontSize="15"/>
                 </StackPanel>
             </Border>
-
             <Border Background="#6A1B9A" CornerRadius="8" Margin="8" Padding="18">
                 <StackPanel>
                     <TextBlock Text="Средний чек" Foreground="White" FontSize="14"/>
@@ -97,16 +87,15 @@
             </Border>
         </UniformGrid>
 
-        <!-- График (исправленная версия) -->
-        <Border Grid.Row="3" Background="White" BorderBrush="#E0E0E0" BorderThickness="1"
+        <!-- График (упрощённая рабочая версия) -->
+        <Border Grid.Row="3" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" 
                 Margin="15,5,15,10" CornerRadius="6" Padding="15">
-
             <StackPanel>
                 <TextBlock Text="Выручка по категориям" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
 
-                <lvc:CartesianChart Series="{Binding RevenueByCategorySeries}">
+                <lvc:CartesianChart Series="{Binding RevenueByCategorySeries}" Height="280">
                     <lvc:CartesianChart.XAxes>
-                        <lvc:Axis Labels="{Binding CategoryLabels}" />
+                        <lvc:Axis Labels="{Binding CategoryLabels}"/>
                     </lvc:CartesianChart.XAxes>
                 </lvc:CartesianChart>
             </StackPanel>
@@ -115,10 +104,10 @@
         <!-- Статус бар -->
         <StatusBar Grid.Row="4">
             <StatusBarItem>
-                <TextBlock Text="{Binding StatusMessage}" />
+                <TextBlock Text="{Binding StatusMessage}"/>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
-                <TextBlock Text="{Binding LastUpdated, StringFormat='Последнее обновление: {0:dd.MM.yyyy HH:mm}'}" />
+                <TextBlock Text="{Binding LastUpdated, StringFormat='Последнее обновление: {0:dd.MM.yyyy HH:mm}'}"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>
