@@ -4,7 +4,7 @@
         xmlns:vm="clr-namespace:DashboardApp.ViewModels"
         xmlns:oxy="http://oxyplot.org/wpf"
         Title="Дашборд аналитики" 
-        Height="800" Width="1400"
+        Height="900" Width="1400"
         WindowStartupLocation="CenterScreen">
 
     <Window.DataContext>
@@ -14,10 +14,17 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- Меню -->
             <RowDefinition Height="Auto"/>
+            <!-- Фильтры -->
             <RowDefinition Height="Auto"/>
+            <!-- KPI -->
             <RowDefinition Height="*"/>
+            <!-- График -->
+            <RowDefinition Height="250"/>
+            <!-- Таблица -->
             <RowDefinition Height="Auto"/>
+            <!-- Статус бар -->
         </Grid.RowDefinitions>
 
         <!-- Меню -->
@@ -92,18 +99,55 @@
 
         <!-- График OxyPlot -->
         <Border Grid.Row="3" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" 
-                Margin="15,5,15,10" CornerRadius="6" Padding="15">
+        Margin="15,5,15,10" CornerRadius="6" Padding="15">
+
             <StackPanel>
-                <TextBlock Text="Выручка по категориям" 
+                <TextBlock Text="Выручка по категориям (кликни по категории для фильтрации)" 
+                   FontSize="16" FontWeight="SemiBold" 
+                   Margin="0,0,0,10"/>
+
+                <oxy:PlotView x:Name="CategoryChart" 
+                      Model="{Binding CategoryRevenuePlotModel}" 
+                      Height="280"
+                      MouseDown="CategoryChart_MouseDown"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Таблица (новая) -->
+        <Border Grid.Row="4" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" 
+                Margin="15,5,15,10" CornerRadius="6" Padding="10">
+
+            <StackPanel>
+                <TextBlock Text="Выручка и заказы по категориям" 
                            FontSize="16" FontWeight="SemiBold" 
                            Margin="0,0,0,10"/>
 
-                <oxy:PlotView Model="{Binding CategoryRevenuePlotModel}" Height="280"/>
+                <DataGrid ItemsSource="{Binding CategorySummaries}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          Height="180"
+                          Margin="0,5,0,0"
+                          AlternatingRowBackground="#F5F5F5"
+                          GridLinesVisibility="Horizontal"
+                          HeadersVisibility="Column">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Категория" 
+                                            Binding="{Binding CategoryName}" 
+                                            Width="*"/>
+                        <DataGridTextColumn Header="Выручка (₽)" 
+                                            Binding="{Binding TotalRevenue, StringFormat='N2'}" 
+                                            Width="150"/>
+                        <DataGridTextColumn Header="Количество заказов" 
+                                            Binding="{Binding OrderCount}" 
+                                            Width="150"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
         </Border>
 
         <!-- Статус бар -->
-        <StatusBar Grid.Row="4">
+        <StatusBar Grid.Row="5">
             <StatusBarItem>
                 <TextBlock Text="{Binding StatusMessage}"/>
             </StatusBarItem>

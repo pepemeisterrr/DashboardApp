@@ -169,4 +169,46 @@ public class SalesRepository
         }
         return list;
     }
+    public async Task<List<CategorySummary>> GetCategorySummaryAsync(FilterSettings filter)
+    {
+        string sql = @"
+        SELECT c.name, 
+               COALESCE(SUM(s.amount), 0) as total_revenue,
+               COUNT(*) as order_count
+        FROM categories c
+        LEFT JOIN sales s ON s.category_id = c.id 
+            AND s.sale_date BETWEEN @from AND @to
+            AND (@categoryId IS NULL OR s.category_id = @categoryId)
+            AND (@regionId IS NULL OR s.region_id = @regionId)
+        GROUP BY c.name
+        ORDER BY total_revenue DESC";
+
+        var list = new List<CategorySummary>();
+
+        await using var conn = new NpgsqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        await using var cmd = new NpgsqlCommand(sql, conn);
+
+        cmd.Parameters.AddWithValue("from", filter.FromDate);
+        cmd.Parameters.AddWithValue("to", filter.ToDate);
+
+        var catParam = cmd.Parameters.Add("categoryId", NpgsqlDbType.Integer);
+        catParam.Value = filter.CategoryId.HasValue ? filter.CategoryId.Value : DBNull.Value;
+
+        var regParam = cmd.Parameters.Add("regionId", NpgsqlDbType.Integer);
+        regParam.Value = filter.RegionId.HasValue ? filter.RegionId.Value : DBNull.Value;
+
+        await using var reader = await cmd.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            list.Add(new CategorySummary
+            {
+                CategoryName = reader.GetString(0),
+                TotalRevenue = reader.GetDecimal(1),
+                OrderCount = reader.GetInt32(2)
+            });
+        }
+        return list;
+    }
 }

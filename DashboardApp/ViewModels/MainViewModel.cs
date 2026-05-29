@@ -45,6 +45,9 @@ public partial class MainViewModel : ObservableObject
     // График OxyPlot
     [ObservableProperty] private PlotModel? _categoryRevenuePlotModel;
 
+    // Таблица (новое)
+    public ObservableCollection<CategorySummary> CategorySummaries { get; } = new();
+
     public MainViewModel()
     {
         _ = InitializeAsync();
@@ -96,6 +99,7 @@ public partial class MainViewModel : ObservableObject
         AverageCheck = await _salesRepository.GetAverageCheckAsync(_currentFilter);
 
         await LoadCategoryRevenueChartAsync();
+        await LoadCategorySummariesAsync();   // ← загрузка таблицы
 
         LastUpdated = DateTime.Now;
         StatusMessage = "Данные обновлены";
@@ -109,14 +113,12 @@ public partial class MainViewModel : ObservableObject
 
         var plotModel = new PlotModel { Title = "Выручка по категориям" };
 
-        // Категории — слева (Y-ось)
         var categoryAxis = new CategoryAxis
         {
             Position = AxisPosition.Left,
             Title = "Категория"
         };
 
-        // Значения — снизу (X-ось)
         var valueAxis = new LinearAxis
         {
             Position = AxisPosition.Bottom,
@@ -142,6 +144,33 @@ public partial class MainViewModel : ObservableObject
 
         plotModel.Series.Add(barSeries);
         CategoryRevenuePlotModel = plotModel;
+    }
+
+    // === Загрузка данных для таблицы ===
+    private async Task LoadCategorySummariesAsync()
+    {
+        if (_salesRepository == null) return;
+
+        var summaries = await _salesRepository.GetCategorySummaryAsync(_currentFilter);
+
+        CategorySummaries.Clear();
+        foreach (var item in summaries)
+        {
+            CategorySummaries.Add(item);
+        }
+    }
+
+    // === Метод для клика по графику (будем использовать позже) ===
+    public void OnCategoryChartClicked(string? categoryName)
+    {
+        if (string.IsNullOrEmpty(categoryName)) return;
+
+        var selected = Categories.FirstOrDefault(c => c.Name == categoryName);
+        if (selected != null)
+        {
+            SelectedCategory = selected;
+            _ = ApplyFiltersAsync();
+        }
     }
 
     private async Task ReinitializeDataAsync()
